@@ -1,0 +1,60 @@
+{% extends "blog/base.html" %}
+{% block title %}View List{% endblock %}
+{% load custom_tags %}
+
+
+{% block content %}
+    <form method="post" action="#">
+    {% csrf_token %}
+
+        <div class="row ">
+            <div class="col-3">
+                        <ul class="list-inline">
+            <li class="list-inline-item"><a href="{% url 'blog-home' %}" class="btn btn-secondary btn-sm">
+                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-arrow-left-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                            </svg>
+                        </a></li>
+                </ul>
+            </div>
+            <h1> <u>Gruppen</u></h1>
+        <div class="container">
+            {% for group in group_list %}
+               <div class="row row-striped">
+                    <div class="col-4 text-right">
+                        <h1 class="display-10"><span class="badge badge-secondary">{{group.member_count}}/{{group.size}}</span></h1>
+                    </div>
+                    <div class="col-6 text-left list-inline">
+                        <div>
+                            <h4 class="text-uppercase"><strong>{{group.name}}</strong></h4>
+                        </div>
+                        <div class="mb-4">
+                            <li class="list-inline-item"><a href={{group.id}} class="btn btn-secondary btn-sm"><i class="fa fa-user" aria-hidden="true"></i>Mitgliedschaft verwalten</a>
+                        </div>
+                        <div>
+                           {% if 1|set_nr == 1 %} {%endif%}
+                            {% for visitor in visitor_list %}
+                                {% if visitor.visitor_groupname|get_str == group.name|get_str %}
+                                {% if 1|get_nr == 1 %}
+                                {% if visitor.visitor_author|get_str == user|get_str or visitor.family_number|get_str == user.profile.family_number|get_str%}
+                                                            <div class="alert alert-info text-right col-6" role="alert">
+                                                                <a href={{group.id}} class="btn col-12 text-center ">
+                                                              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                              <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                                            </svg></a>
+                                                            </div>
+                                    {% if 0|set_nr == 1 %} {%endif%}
+                                    {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+                </div>
+
+            {% endfor %}
+        </div>
+    </form>
+{% endblock %}

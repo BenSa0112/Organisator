@@ -1,0 +1,128 @@
+{% extends "blog/base.html" %}
+{% load custom_tags %}
+
+{% block content %}
+    <form method="post" action="#">
+        <div class="row mb-3">
+            <div class="col-3">
+                        <ul class="list-inline">
+            <li class="list-inline-item"><a href="{% url 'blog-home' %}" class="btn btn-secondary btn-sm">
+                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-arrow-left-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                            </svg>
+                        </a></li>
+                </ul>
+            </div>
+        </div>
+    {% csrf_token %}
+            {% for date in churchday_list %}
+                {% if date.date|get_date_size == 1 %}
+                 <div class="row row-striped mb-3">
+                    <div class="col-3 text-right">
+                        <h2>{{date.day}}</h2>
+                        {% if date.month == "01" %}
+                            <h3>Jan</h3>
+                        {% endif %}
+                        {% if date.month == "02" %}
+                            <h3>Februar</h3>
+                        {% endif %}
+                        {% if date.month == "03" %}
+                            <h3>März</h3>
+                        {% endif %}
+                        {% if date.month == "04" %}
+                            <h3>April</h3>
+                        {% endif %}
+                        {% if date.month == "05" %}
+                            <h3>Mai</h3>
+                        {% endif %}
+                        {% if date.month == "06" %}
+                            <h3>Juni</h3>
+                        {% endif %}
+                        {% if date.month == "07" %}
+                            <h3>Juli</h3>
+                        {% endif %}
+                        {% if date.month == "08" %}
+                            <h3>August</h3>
+                        {% endif %}
+                        {% if date.month == "09" %}
+                            <h3>September</h3>
+                        {% endif %}
+                        {% if date.month == "10" %}
+                            <h3>Oktober</h3>
+                        {% endif %}
+                        {% if date.month == "11" %}
+                            <h3>November</h3>
+                        {% endif %}
+                        {% if date.month == "12" %}
+                            <h3>Dez</h3>
+                        {% endif %}
+                        <h4>{{date.year}}</h4>
+                    </div>
+                    <div class="col-5">
+                        <td>{{visitor.text}}</td>
+                        <h5 class="text-uppercase"><strong>{{date.group}}</strong></h5>
+                        <ul class="list-inline">
+                            <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i>
+                                {% if date.weekday == 2 %}
+                                    Mittwoch
+                                {% endif %}
+                                {% if date.weekday == 6 %}
+                                    Sonntag
+                                {% endif %}
+                            </li>
+                            <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i>
+                                {% if date.weekday == 2 %}
+                                    19:30 - 21:00
+                                {% endif %}
+                                {% if date.weekday == 6 %}
+                                    10:00 - 12:00
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                 <div class="col-4">
+                   <h1 class="display-6"><span class="badge badge-secondary">{{date.visitor_size}}/{{date.group_size}}</span></h1>
+                       <p><li class="list-inline-item"><a href={{date.id}} class="btn btn-secondary btn-sm"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-plus-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg></i> Verwalten</a></li>
+                       </p>
+                       {% if 1|set_nr == 1 %} {%endif%}
+                       {% for id in church_day_visitor_list %}
+                            {% for key, values in id.items %}
+                                {% if date.id == values %}
+                                    {% for key, values in id.items %}
+                                        {% for key, values in values.items %}
+                                            {% if 1|get_nr == 1 %}
+                                                {% for key, v, x, y, z in values %}
+                                                    {%if z|get_str == user.profile.family_number|get_str or v|get_str == user|get_str%}
+                                                        <div class="alert alert-info" role="alert">
+                                                            <a href={{date.id}} class="btn col-12 text-center ">
+                                                          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                          <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                                        </svg></a>
+                                                        </div>
+
+                                                    {% if 0|set_nr == 1 %} {%endif%}
+                                                    {%endif%}
+                                                {% endfor %}
+                                            {%endif%}
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                       {% endfor %}
+                   </div>
+                 </div>
+                {% endif %}
+            {% endfor %}
+                </ul>
+        </div>
+    </form>
+<ul class="pagination md">
+    {%for i in paginator.page_range%}
+    <li class="page-item mb-3">
+        <a class="page-link" href="?page={{i}}">{{i}}</a>
+    </li>
+    {%endfor%}
+</ul>
+{% endblock %}

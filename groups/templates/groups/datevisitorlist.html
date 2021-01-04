@@ -1,0 +1,89 @@
+{% extends "blog/base.html" %}
+{% block title %}View List{% endblock %}
+{% load custom_tags %}
+
+{% block content %}
+<form method="post" action="#">
+{% for message in messages %}
+<div class="row-3">
+<form method="post" action="#">
+{% if 'safe1' in message.tags %}
+    <div class="alert alert-info" role="alert">
+        <div class="column">
+            {{new_member_name}} ist schon in der Liste eingetragen. Name trotzdem hinzufügen?
+            <div class="row">
+                <div class="mb-1">
+                    <button type="submit" class="btn btn-success" name="equalname" value={{new_member_name|replace_}}>Ja</button>
+                    <li class="list-inline-item"><a href="{% url 'calender' %}"class="btn">
+                        <button type="delete" class="btn btn-danger" name="nothing" value="nothing">Nein</button>
+                    </a></li>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+{% csrf_token %}
+<div class="mb-4">
+    <ul class="list-inline">
+        <li class="list-inline-item"><a href="{% url 'calendar' %}" class="btn btn-secondary btn-sm">
+            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-arrow-left-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                </svg>
+            </a></li>
+    </ul>
+    {% if visitor_list.items|get_size < group_size or request.user.is_superuser%}
+    <div class="col mb-3">
+    <h3>Gottesdienst am {{group_date_day}}.{{group_date_month}}.{{group_date_year}}</h3>
+        {% if group_date|get_date_size == 1 or request.user.is_superuser %}
+            Vor- und Nachnamen hier eingeben:
+            <input class="mb-1" type="text" name="new">
+                {%if request.user.is_superuser%}
+                <div class="row">
+                    Adresse und Anschrift hier eingeben:
+                    <input type="text" name="address">
+                </div>
+                <div class="row">
+                    Nummer hier eingeben:
+                    <input type="text" name="number">
+                </div>
+            {%endif%}
+            <button type="submit" class="btn btn-success" name="newName" value="newName">Zur Gruppe hinzufügen</button>
+        {% endif %}
+            </div>
+    {% else %}
+            {% if group_date|get_date_size == 1 %}
+                    Gruppe ist voll!
+            {% endif %}
+    {% endif %}
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">{{visitor_list.items|get_size}}/{{group_size}}</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for key, values in reverse_visitor_list.items %}
+    <tr>
+      <th scope="row">{{ forloop.revcounter }}</th>
+      {% for v in values %}
+      <td>{{v.0}}</td>
+        {% if group_date|get_date_size == 1 or request.user.is_superuser%}
+        {% if v.4|get_str ==  user.profile.family_number|get_str or request.user.is_superuser or v.1|get_str == user|get_str%}
+        <th><button type="delete" class="btn btn-danger" name="delete" value="{{key}}">Entfernen</button></th>
+        {% endif %}
+        {% endif %}
+    </tr>
+  {% endfor %}
+  {% endfor %}
+  </tbody>
+</table>
+</form>
+{% endblock %}
+
+
+
+

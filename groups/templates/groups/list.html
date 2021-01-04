@@ -1,0 +1,99 @@
+{% extends "blog/base.html" %}
+{% block title %} Gruppen {% endblock %}
+{% load custom_tags %}
+
+{% block content %}
+{% for message in messages %}
+<div class="row-3">
+<form method="post" action="#">
+{% if 'safe1' in message.tags %}
+    <div class="alert alert-info" role="alert">
+        <div class="column">
+            {{new_member_name}} ist schon in der Liste eingetragen. Name trotzdem hinzufügen?
+            <div class="row">
+                <div class="mb-1">
+                    <button type="submit" class="btn btn-success" name="equalname" value={{new_member_name|replace_}}>Ja</button>
+                    <li class="list-inline-item"><a href="{% url 'groups' %}" class="btn">
+                        <button type="delete" class="btn btn-danger" name="nothing" value="nothing">Nein</button>
+                    </a></li>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+{% for message in messages %}
+<div class="row-3">
+<form method="post" action="#">
+{% if 'safe2' in message.tags %}
+    <div class="alert alert-info" role="alert">
+        <div class="column">
+            {{new_member_name}} ist schon in {{other_group_name}} eingetragen. Name trotzdem hinzufügen?
+            <div class="row">
+                <div class="mb-1">
+                    <button type="submit" class="btn btn-success" name="equalname" value={{new_member_name|replace_}}>Ja</button>
+                    <li class="list-inline-item"><a href="{% url 'groups' %}" class="btn">
+                        <button type="delete" class="btn btn-danger" name="nothing" value="nothing">Nein</button>
+                    </a></li>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+<ul class="list-inline">
+<li class="list-inline-item"><a href="{% url 'groups' %}" class="btn btn-secondary btn-sm">
+    <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-arrow-left-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+    </svg>
+</a></li>
+</ul>
+
+<h1>{{ls.name}}</h1>
+<form method="post" action="#">
+{% csrf_token %}
+<div class="mb-4">
+    {%if ls_allow == True or request.user.is_superuser%}
+        {% if lg < ls.group_size or request.user.is_superuser%}
+        Vor- und Nachnamen hier eingeben:
+        <input class="mb-1" type="text" name="new" value={{new}}>
+        <button type="submit" class="btn btn-success " name="newName" value="newName">Zur Gruppe hinzufügen</button>
+        {% else %}
+        Gruppe ist voll!
+        {% endif %}
+    {%else%}
+        Verwaltung der Gruppen momentan nicht freigeschaltet.
+    {%endif%}
+
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">{{lg}}/{{ls.group_size}}</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for visitor in ls.visitor_set.all %}
+    <tr>
+      <th scope="row">{{ forloop.counter }} </th>
+      <td>{{visitor.text}}</td>
+        {%if ls_allow == True or request.user.is_superuser%}
+        {% if visitor.family_number == user.profile.family_number|get_str or request.user.is_superuser or visitor.author|get_str == user|get_str%}
+        <th><button type="delete" class="btn btn-danger" name="delete" value="{{visitor.id}}">Entfernen</button></th>
+        {% endif %}
+        {% endif %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</form>
+<ul class="list-inline">
+<li class="list-inline-item"><a href="{% url 'groups' %}" class="btn btn-secondary btn-sm">
+    <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-arrow-left-short" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+    </svg>
+</a></li>
+</ul>
+{% endblock %}
